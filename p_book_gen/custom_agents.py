@@ -785,7 +785,8 @@ The user will provide ONE JSON object as their first message. It will include fi
 - min_chapters
 
 The book title is: {{book_title}} - ensure your chapter contributes to this overall theme and fits within the book's narrative arc.
-Book subtitle (if any): {{book_subtitle}}
+Book subtitle (if any): use the "book_subtitle" field from the input JSON if present.
+
 
 Before your turn, an outline planning agent has already created a full outline
 for all chapters, including a unique Friedrich Nietzsche aphorism for each chapter. That outline

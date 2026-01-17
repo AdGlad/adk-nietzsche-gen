@@ -1,0 +1,4 @@
+app_name: p-book-gen
+root_agent: p_book_gen.agent.root_agent
+description: "Parallel chapter-writing workflow (fan-out test)."
+

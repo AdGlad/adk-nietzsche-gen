@@ -1,0 +1,7 @@
+flask
+gunicorn
+google-cloud-storage
+pydantic
+google-genai
+google-cloud-aiplatform
+google-adk

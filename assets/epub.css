@@ -1,0 +1,5 @@
+.pagebreak {
+  page-break-after: always;
+  break-after: page;
+}
+

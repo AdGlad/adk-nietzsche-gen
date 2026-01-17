@@ -1,0 +1,12 @@
+{
+  "job_id": "testjob01",
+  "session_id": "testsession",
+  "manuscript_gs_uri": "gs://kindle-books/books/test/manuscripts/book.md",
+  "output_epub_gs_uri": "gs://kindle-books/books/test/epub/book.epub",
+  "metadata": {
+    "title": "Test Book",
+    "subtitle": "A quick test",
+    "author": "Adam Gladstone",
+    "lang": "en-GB"
+  }
+}

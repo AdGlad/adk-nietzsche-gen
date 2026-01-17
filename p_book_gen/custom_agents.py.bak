@@ -798,24 +798,25 @@ Your task for chapter {chapter_number}:
    - Directly below that heading, include the quote from the outline in this exact format:
 
        “Exact quote text.”
-       — Friedrich Nietzsche
+       — Name of Person
 
+   Subheading and body:
+   - After the quote, include a short subheading line (plain text, not a Markdown heading),
+     for example: "How leaders respond when the ground shifts".
    - Then write the body text that aligns with the book topic, purpose, target audience,
-     and the outline description directly after the quote.
+     and the outline description.
 
    Additional formatting constraints:
-   - Do NOT use any additional H1 headings. H1 is reserved for chapter titles.
-   - Do NOT use any H2 headings. If you need internal structure, prefer paragraphs
+   - Do NOT use any H1 headings (# ...) in this chapter. H1 is reserved for the book title.
+   - Do NOT use any additional H2 headings. If you need internal structure, prefer paragraphs
      or, at most, modest emphasis, but avoid extra heading levels.
-   - Insert page-break markup at the END of each chapter in EXACTLY this format:
-
-       <mbp:pagebreak />
+   - Do NOT insert any explicit page-break markup (for example <mbp:pagebreak /> or '---').
+     Page breaks will be added later by another part of the workflow.
 
 4. The quote you use MUST:
-   - Be a genuine Friedrich Nietzsche quote that fits the chapter theme.
-   - If the outline provides a different quote, you must replace it with an appropriate Nietzsche quote.
+   - Be exactly the one that the outline assigned to chapter {chapter_number}.
    - Not be reused from any other chapter in the outline.
-   - The chapter content must directly relate to and expand upon this Nietzsche quote.
+   - Not be replaced by a different quote unless absolutely necessary.
 
 5. The body should be written as conventional non-fiction prose, with paragraphs and no bullet points.
 
@@ -835,9 +836,9 @@ Hard bans (must not appear anywhere in the chapter):
 - No bold lead-in labels such as:
   **Key idea:**, **In practice:**, **Step 1:**, **Tip:**, **Summary:**
 - No colon-led “label: sentence” structures at paragraph starts.
-- Do not use semicolons unless they are correct English punctuation (e.g., in complex lists). Prefer full stops or commas.
+- Avoid semicolons. Prefer full stops or commas.
 - Do not write in “framework voice” (e.g., “First… Second… Third…”).
-- Do not use subheadings beyond the single required H1 chapter heading.
+- Do not use subheadings beyond the single required H2 chapter heading.
 
 To avoid identical pacing across chapters, you MUST follow this chapter form:
 Chapter form for this chapter: {_chapter_form(chapter_number)}
@@ -859,13 +860,6 @@ Form guidance (do not label; do not announce; do not treat as a checklist):
 - Split-Lens Narrative: present situations through multiple simultaneous perspectives; show how viewpoints shape reality.
 - Myth vs Mechanism: contrast idealized stories with practical realities; expose the machinery behind the myth.
 - Counterfactual Simulation: explore "what if" scenarios; examine alternative outcomes and their implications.
-
-Paragraph structure (STRICT):
-- Keep paragraphs to standard length: 3-6 sentences per paragraph.
-- Create variation: mix short (2-3 sentences) and longer (5-7 sentences) paragraphs throughout the chapter.
-- Avoid very long paragraphs (more than 8 sentences).
-- Use paragraph breaks to create natural pauses and emphasis.
-- Consecutive paragraphs should vary in length to maintain reader engagement.
 
 Narrative style requirements:
 - Write as continuous, human prose with paragraphs that flow.
@@ -1909,7 +1903,7 @@ class ParseSpecAgent(BaseAgent):
 
         # Persist canonical fields for downstream agents
         state["spec"] = spec
-        for k in ["book_topic", "book_title", "author_name", "author_bio", "author_voice_style", "target_audience", "book_purpose", "min_chapters"]:
+        for k in ["book_topic", "author_name", "author_bio", "author_voice_style", "target_audience", "book_purpose", "min_chapters"]:
             if k in spec:
                 state[k] = spec.get(k)
 

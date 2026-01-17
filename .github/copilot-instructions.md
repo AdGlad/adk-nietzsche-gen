@@ -71,10 +71,14 @@ storage_client.bucket(bucket).blob(blob).upload_from_filename(local_path)
 ## Conventions
 - **Markdown**: Kindle-compatible with `<mbp:pagebreak />` between sections
 - **Language**: UK English throughout
-- **JSON Spec**: First user message contains book metadata (topic, author, audience, etc.)
+- **JSON Spec**: First user message contains book metadata (topic, book_title, author, audience, etc.)
 - **Chapter Forms**: Rotate through 16 narrative styles (anecdote-led, idea-first, case study, counterargument, braided narrative, second-person, decision-point reconstruction, post-mortem analysis, doctrine exposed, unsaid version, constraint-first framing, long-horizon consequence, mirror test, split-lens narrative, myth vs mechanism, counterfactual simulation)
 - **Word Counts**: Vary by chapter (1300-3000 words)
 - **Business Cases**: Each chapter includes one well-known true business case study
+- **Chapter Headings**: H1 format (# Chapter N: Title) with Nietzsche quote, no subheading, page break at end
+- **Nietzsche Quotes**: Each chapter must begin with a genuine Friedrich Nietzsche quote; content must directly relate to and expand upon the quote
+- **Paragraphs**: 3-6 sentences with variation (mix short and longer paragraphs)
+- **Punctuation**: No semicolons except in correct English usage
 
 ## Testing & Debugging
 - Agents run in ADK environment; test via `adk dev` or deployed app

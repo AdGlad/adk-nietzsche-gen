@@ -16,7 +16,7 @@ Later steps will add:
 
 from .custom_agents import build_full_workflow_agent
 
-# For now, default to a maximum of 20 chapters in the workflow.
-#root_agent = build_full_workflow_agent(min_chapters_for_now=20)
+# For now, default to a maximum of 30 chapters in the workflow.
+#root_agent = build_full_workflow_agent(min_chapters_for_now=30)
 root_agent = build_full_workflow_agent()
 

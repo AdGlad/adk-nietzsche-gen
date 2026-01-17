@@ -438,13 +438,14 @@ def _outline_instruction(num_chapters: int) -> str:
     Instruction for the outline planning agent.
 
     It reads the JSON spec from the user message and produces a chapter-by-chapter
-    outline, including a UNIQUE famous quote for each chapter.
+    outline, including a UNIQUE Nietzsche aphorism for each chapter.
     """
     return f"""
-You are a planning agent for a non-fiction Kindle book.
+You are a planning agent for a non-fiction Kindle book inspired by Friedrich Nietzsche's philosophy.
 
 The user will provide ONE JSON object as their first message. It will include fields like:
 - book_topic
+- book_title
 - author_name
 - author_bio
 - author_voice_style
@@ -454,20 +455,30 @@ The user will provide ONE JSON object as their first message. It will include fi
 
 Your task:
 
-1. Read and understand the JSON object.
-2. Create a chapter-by-chapter outline for exactly {num_chapters} chapters.
-3. For each chapter, define:
-   - Chapter number
-   - Chapter title
-   - A short one-line description of the chapter's focus
-   - One specific, well-known, real quote from a respected person
-     that matches the chapter theme.
-4. Each quote must be:
-   - Real and widely attributed to an actual person
+1. Read and understand the JSON object, particularly the book_title and book_topic.
+2. The book title is: {{book_title}} - use this exact title as the foundation for your outline.
+3. FIRST, select appropriate Nietzsche aphorisms, THEN create chapter titles and descriptions around them.
+4. Create a chapter-by-chapter outline for exactly {{min_chapters}} chapters (or {num_chapters} if min_chapters is not specified).
+5. For each chapter, start by selecting one of Nietzsche's most famous aphorisms, then craft:
+   - Chapter title that connects the aphorism to the book_title and topic
+   - A short one-line description of how the aphorism applies to the chapter's focus
+   - The complete aphorism text
+   - The source book where the aphorism appears
+6. Each Nietzsche aphorism must be:
+   - A real, authentic aphorism from Friedrich Nietzsche's works
+   - One of Nietzsche's most famous and widely recognized aphorisms
    - Assigned to exactly ONE chapter in this outline
-   - NOT reused across chapters (no duplicate quotes, no duplicate quote texts)
-5. Try to vary the voices across chapters (e.g. mix philosophers, leaders, writers,
-   technologists, etc.), but always stay relevant to the book topic.
+   - NOT reused across chapters
+   - Include the specific book/source reference
+7. Prioritize Nietzsche's most popular aphorisms such as:
+   - "God is dead" from The Gay Science
+   - "What does not kill me makes me stronger" from Twilight of the Idols
+   - "He who has a why to live can bear almost any how" from various works
+   - "The Übermensch" concepts from Thus Spoke Zarathustra
+   - "Eternal recurrence" from The Gay Science
+   - "Will to power" concepts from various works
+   - And other well-known aphorisms from Beyond Good and Evil, Human, All Too Human, etc.
+8. The outline should create a cohesive framework where each chapter explores the deeper meaning and implications of its assigned aphorism as applied to the book's topic and purpose.
 
 Output format:
 
@@ -476,8 +487,9 @@ Output format:
 
   Chapter 1: <Chapter title>
   Description: <one line>
-  Quote: "Exact quote text."
-  Author: <Name of person>
+  Aphorism: "Exact Nietzsche aphorism text."
+  Source: <Book title where aphorism appears>
+  Author: Friedrich Nietzsche
 
   Chapter 2: ...
   ...
@@ -485,6 +497,7 @@ Output format:
 - Do NOT include any JSON or code in your output.
 - Do NOT mention tools or models.
 - Use UK English spelling wherever applicable.
+- Every aphorism must be from Friedrich Nietzsche - no other authors allowed.
 """
 
 
@@ -758,11 +771,12 @@ def _chapter_instruction(chapter_number: int) -> str:
     - Follow Kindle/KDP-friendly Markdown conventions.
     """
     return f"""
-You are a specialist non-fiction book writer for chapter {chapter_number} of a Kindle book.
+You are a specialist non-fiction book writer for chapter {chapter_number} of a Kindle book inspired by Friedrich Nietzsche's philosophy.
 Do not write in “workshop facilitator” tone. Write like an author: opinionated, specific, occasionally anecdotal, and willing to linger on a point for a full paragraph before moving on.
 
 The user will provide ONE JSON object as their first message. It will include fields like:
 - book_topic
+- book_title
 - author_name
 - author_bio
 - author_voice_style
@@ -770,8 +784,11 @@ The user will provide ONE JSON object as their first message. It will include fi
 - book_purpose
 - min_chapters
 
+The book title is: {{book_title}} - ensure your chapter contributes to this overall theme and fits within the book's narrative arc.
+Book subtitle (if any): {{book_subtitle}}
+
 Before your turn, an outline planning agent has already created a full outline
-for all chapters, including a unique famous quote for each chapter. That outline
+for all chapters, including a unique Friedrich Nietzsche aphorism for each chapter. That outline
 appears earlier in the conversation and is also stored in shared state.
 
 Your task for chapter {chapter_number}:
@@ -784,7 +801,9 @@ Your task for chapter {chapter_number}:
 1. If you are not skipping this chapter, read the outline that was generated earlier and
    identify the entry for chapter {chapter_number}.
    - Use the chapter title and short description from that outline as the basis for this chapter.
-   - Use the EXACT quote and author assigned to chapter {chapter_number} in the outline.
+   - Use the EXACT Friedrich Nietzsche aphorism assigned to chapter {chapter_number} in the outline.
+   - The chapter content MUST be crafted based on the deep meaning and implications of this aphorism.
+   - Include the source book reference as provided in the outline.
 
 2. Use UK English and a natural, human narrative voice. Avoid any meta-commentary about being an AI.
 
@@ -795,10 +814,10 @@ Your task for chapter {chapter_number}:
 
        # Chapter {chapter_number}: <Title from outline>
 
-   - Directly below that heading, include the quote from the outline in this exact format:
+   - Directly below the heading, include the aphorism from the outline in this exact format:
 
        “Exact quote text.”
-       — Friedrich Nietzsche
+       — Friedrich Nietzsche, <Source Book>
 
    - Then write the body text that aligns with the book topic, purpose, target audience,
      and the outline description directly after the quote.
@@ -811,11 +830,11 @@ Your task for chapter {chapter_number}:
 
        <mbp:pagebreak />
 
-4. The quote you use MUST:
-   - Be a genuine Friedrich Nietzsche quote that fits the chapter theme.
-   - If the outline provides a different quote, you must replace it with an appropriate Nietzsche quote.
+4. The aphorism you use MUST:
+   - Be a genuine Friedrich Nietzsche aphorism that fits the chapter theme.
+   - If the outline provides a different aphorism, you must replace it with an appropriate Nietzsche aphorism.
    - Not be reused from any other chapter in the outline.
-   - The chapter content must directly relate to and expand upon this Nietzsche quote.
+   - The chapter content must be crafted based on the aphorism's deep meaning and implications.
 
 5. The body should be written as conventional non-fiction prose, with paragraphs and no bullet points.
 
@@ -828,7 +847,7 @@ Your task for chapter {chapter_number}:
 Style and tone:
 - UK English spelling.
 - Clear, confident, practical, and aimed at the specified target audience.
-- Ensure the chapter clearly connects back to the quote and shows why it matters for the reader.
+- Ensure the chapter clearly connects back to the aphorism and shows why it matters for the reader.
 Hard bans (must not appear anywhere in the chapter):
 - No bullet lists, numbered lists, or checklist formatting of any kind.
   (No lines starting with '-', '*', '•', '1.', '2.', etc.)
@@ -842,7 +861,7 @@ Hard bans (must not appear anywhere in the chapter):
 To avoid identical pacing across chapters, you MUST follow this chapter form:
 Chapter form for this chapter: {_chapter_form(chapter_number)}
 
-Form guidance (do not label; do not announce; do not treat as a checklist):
+CRITICAL: You must actively implement this specific narrative form in your writing. Do not just write a generic chapter - structure your content according to this exact form's requirements. Each form demands a different approach to pacing, structure, and reader engagement.
 - Anecdote-led reflection: open with a concrete scene; let the idea emerge from it; return briefly to the scene later.
 - Idea-first deep dive: open with a claim or tension; expand through reasoning; introduce a vignette late as proof.
 - Case study and consequences: centre on one situation; explore what happened, why it mattered, what it revealed; include an uncomfortable trade-off.
@@ -871,7 +890,7 @@ Narrative style requirements:
 - Write as continuous, human prose with paragraphs that flow.
 - Use varied sentence length and occasional rhetorical questions.
 - Use concrete examples and small situational vignettes (1–3 sentences) to ground concepts.
-- Use transitions between paragraphs (e.g., “That’s where…”, “The point is…”, “What this looks like on a wet Tuesday night…”).
+- Use transitions between paragraphs.
 - If structure is needed, do it implicitly via paragraphing, not formatting.
 
 
@@ -945,8 +964,8 @@ You are a book assembler agent.
 
 Context:
 - The user provided ONE JSON object as their first message with fields such as:
-  book_topic, author_name, author_bio, author_voice_style, target_audience, book_purpose, min_chapters.
-- An outline planning agent has already created an outline for all chapters.
+  book_topic, book_title, author_name, author_bio, author_voice_style, target_audience, book_purpose, min_chapters.
+- An outline planning agent has already created an outline for all chapters using only Friedrich Nietzsche quotes.
 - A front-matter agent has already created Dedication, Foreword, Introduction, and About the Author
   and stored that text in shared state under 'front_matter'.
 - Several chapter-writing agents have already run and stored their outputs in shared state.
@@ -979,14 +998,10 @@ Your task:
    from state['cover_prompts'] if they exist.
 
    Title and subtitle resolution:
-   - If cover_prompts is available, parse it to find:
-       - The "Book Title" section (labelled with a heading like "# Book Title")
-       - The "Subtitle" section (labelled with a heading like "# Subtitle")
-     and use those values as the canonical book title and subtitle.
-   - If cover_prompts is NOT available or does not clearly specify a title/subtitle,
-     then:
-       - Derive a clear, compelling main title based on book_topic.
-       - Derive a short subtitle using book_purpose and/or target_audience.
+   - FIRST, check state for "book_title" (set by ParseSpecAgent from JSON). If present, use this as the canonical book title.
+   - If "book_title" is not in state, then check the original JSON spec for a "book_title" field.
+   - If still no title, check cover_prompts for generated titles.
+   - For subtitle, check state for "book_subtitle", then JSON, then cover_prompts, then derive from book_purpose/target_audience.
 
    Author name:
    - Use author_name exactly as provided in the JSON.
@@ -1021,7 +1036,7 @@ Your task:
    c) Chapters
       - For each chapter i from 1 to {num_chapters}:
         * If chapter_i_text is present and not equal to "SKIP_CHAPTER", include it in order.
-        * Do not alter the chapter's H2 heading ("## Chapter i: Title") or epigraph quote formatting,
+        * Do not alter the chapter's H1 heading ("# Chapter i: Title") or epigraph aphorism formatting,
           except for very light edits to fix obvious typos.
         * Maintain the chapter body as written; do not radically rewrite it.
         * After each included chapter, insert a pagebreak:
@@ -1721,7 +1736,7 @@ No extra text. No headings. No JSON. No bullets.
 # Full workflow: SequentialAgent(root) = Parallel chapters → Merge
 # ---------------------------------------------------------------------
 
-def build_full_workflow_agent(max_chapters: int = 20) -> SequentialAgent:
+def build_full_workflow_agent(max_chapters: int = 30) -> SequentialAgent:
 
     """
     Build the root SequentialAgent for this step.
@@ -1768,7 +1783,7 @@ def build_full_workflow_agent(max_chapters: int = 20) -> SequentialAgent:
     workflow = SequentialAgent(
         name="p_book_gen_workflow",
         description=(
-            "Deterministic workflow: outline planning, front-matter generation, "
+            "Deterministic workflow: spec parsing, outline planning, front-matter generation, "
             "front-matter save, cover prompts, parallel chapter generation, "
             "save chapters to GCS, merge from GCS into a single manuscript, "
             "then save the full book and cover prompts to GCS."
@@ -1776,8 +1791,6 @@ def build_full_workflow_agent(max_chapters: int = 20) -> SequentialAgent:
         sub_agents=[
             parse_spec_agent,
             outline_agent,
-            title_synthesis_agent,
-            parse_title_agent,
             front_matter_agent,
             save_front_matter_agent,
             cover_prompts_agent,
@@ -1909,7 +1922,7 @@ class ParseSpecAgent(BaseAgent):
 
         # Persist canonical fields for downstream agents
         state["spec"] = spec
-        for k in ["book_topic", "book_title", "author_name", "author_bio", "author_voice_style", "target_audience", "book_purpose", "min_chapters"]:
+        for k in ["book_topic", "book_title", "book_subtitle", "author_name", "author_bio", "author_voice_style", "target_audience", "book_purpose", "min_chapters"]:
             if k in spec:
                 state[k] = spec.get(k)
 
